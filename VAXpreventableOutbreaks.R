@@ -57,8 +57,10 @@ WhoopingCough$Year <- as.numeric(WhoopingCough$Year)
 
 names(WhoopingCough)
 
-min(WhoopingCough$Year)
-max(WhoopingCough$Year)
+# split data according to impact scale
+epidemic <- WhoopingCough[grep("Epd", WhoopingCough$ImpactScale), ]
+cluster <- WhoopingCough[grep("Clst", WhoopingCough$ImpactScale), ]
+min(cluster$Cases) 
 
 # write results to file
 write.table(WhoopingCough, "WhoopingCough.csv", sep=",", col.names=TRUE, row.names = FALSE)
