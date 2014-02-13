@@ -4,8 +4,6 @@ names(outbreaks)
 # look for US cases
 USoutbreaks <- outbreaks[grep("U.S.", outbreaks$Location),]
 
-head(USoutbreaks)
-
 # select for Whooping Cough cases
 WhoopingCough <- USoutbreaks[grep("Whooping Cough", USoutbreaks$Outbreak), ]
 head(WhoopingCough)
@@ -16,7 +14,7 @@ require(stringr)
 location <- str_split_fixed(WhoopingCough$Location, " ",2)
 colnames(location) <-c("Country", "State")
 location<- as.data.frame(location)
-citystate <- str_split_fixed(uspop.c2$City, ", ", 2)
+
 
 # remove parenthesis from State column
 a <- gsub("\\(", "", location$State)
@@ -39,6 +37,11 @@ WhoopingCough$Cases <- as.numeric(WhoopingCough$Cases)
 WhoopingCough$Fatalities <- as.numeric(WhoopingCough$Fatalities)
 colnames(WhoopingCough) <- c("Category", "Outbreak", "Lat", "Long", "Date", "Cases", "Fatalities", "ImpactScale", "SourceCitation", "Source", "State", "City")
 names(WhoopingCough)
+
+# write results to file
+write.table(WhoopingCough, "WhoopingCough.csv", sep=",", col.names=TRUE, row.names = FALSE)
+write.table(uspop.c2, "uspop.csv", sep=",", col.names= TRUE, row.names = FALSE)
+
 
 
 ##########################################################
