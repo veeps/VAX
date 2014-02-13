@@ -38,9 +38,28 @@ WhoopingCough$Fatalities <- as.numeric(WhoopingCough$Fatalities)
 colnames(WhoopingCough) <- c("Category", "Outbreak", "Lat", "Long", "Date", "Cases", "Fatalities", "ImpactScale", "SourceCitation", "Source", "State", "City")
 names(WhoopingCough)
 
+WC <-WhoopingCough
+
+# select for start and end dates for Date column
+Dates<- str_split(WC$Date, "-", 2)
+
+# since not all dates have a range, for the ones that do have a range, 
+# I am going to replace the range with the start date value 
+StartDate <- sapply(Dates, FUN=function(x) x[1])
+
+# split Date to month and Year
+MonthYear <- str_split(StartDate, "/", 2)
+WhoopingCough$Month <- sapply(MonthYear, FUN= function(x) x[1])
+WhoopingCough$Month <- as.numeric(WhoopingCough$Month)
+WhoopingCough$Year <- sapply(MonthYear, FUN=function(x) x[2])
+WhoopingCough$Year <-- as.numeric(WhoopingCough$Year)
+
+names(WhoopingCough)
+
+
 # write results to file
 write.table(WhoopingCough, "WhoopingCough.csv", sep=",", col.names=TRUE, row.names = FALSE)
-write.table(uspop.c2, "uspop.csv", sep=",", col.names= TRUE, row.names = FALSE)
+
 
 
 
