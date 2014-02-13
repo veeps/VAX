@@ -78,7 +78,7 @@ MapCases + geom_polygon(data=all_states, aes(x=long, y=lat, group=group, color=S
   geom_point(aes(size=Cases)) + xlim(long) + ylim(lat)
 names(WhoopingCough)
 
-ggplot(WhoopingCough, aes(x = Year, y = Cases, color = as.factor(Month))) + geom_point()
+ggplot(WhoopingCough, aes(x = Year, y = Cases, color = ImpactScale)) + geom_point() + ggtitle("CFR Pertussis Cases")
 
 names(WhoopingCough)
 
@@ -110,14 +110,9 @@ CDC2008_2013 <- CDCcases [87:92, ]
 require(ggplot2)
 # merge CFR data with CDC data
 mergedCases <- join(x=TotalCasesByYear, y= CDC2008_2013, by = "Year", match ="first")
-mergedCases$CDCCases
-ggplot(mergedCases, aes(x=Years)) + geom_point(aes(y=log(CFRCases)), color ="purple") + geom_point(aes(y=log(CDCCases)), color = "indianred1") + 
-  ggtitle("Whooping Cough Cases CDC vs. CFR") 
 
 # metl data
 require(reshape)
 meltMerged <- melt(mergedCases, "Year", c("CFRCases", "CDCCases"))
 colnames(meltMerged) <- c("Year", "Source", "Cases")
 ggplot(meltMerged, aes(x=Year, y=log(Cases))) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
-
-class(meltMerged$value)
