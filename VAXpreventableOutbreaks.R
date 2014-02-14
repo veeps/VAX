@@ -117,4 +117,9 @@ mergedCases <- join(x=TotalCasesByYear, y= CDC2008_2013, by = "Year", match ="fi
 require(reshape)
 meltMerged <- melt(mergedCases, "Year", c("CFRCases", "CDCCases"))
 colnames(meltMerged) <- c("Year", "Source", "Cases")
+
+# log scale
 ggplot(meltMerged, aes(x=Year, y=log(Cases))) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
+
+
+ggplot(meltMerged, aes(x=Year, y=Cases)) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
