@@ -7,7 +7,17 @@
 	</head>
 	<body>
 		<script type="text/javascript">
-		// D3 code in here
+		var dataset; //Global variable
+		d3.csv("WhoopingCough.csv", function(data) {
+			if(error){
+				console.log(error); //Log the error
+			} else {
+				console.log(data); //log the data
+			dataset = data; //Once loaded, copy to dataset.
+			generateVis(); //Then call other functions that
+			hideLoadingMsg();
+				}
+		});
 		</script>
 	</body>
 </html>
