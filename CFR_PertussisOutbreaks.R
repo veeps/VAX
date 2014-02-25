@@ -62,9 +62,18 @@ epidemic <- WhoopingCough[grep("Epd", WhoopingCough$ImpactScale), ]
 cluster <- WhoopingCough[grep("Clst", WhoopingCough$ImpactScale), ]
 min(cluster$Cases) 
 
+# remove commas from columns
+WhoopingCough$SourceCitation <- gsub(",", "", WhoopingCough$SourceCitation)
+
+# change month into numerics
+WhoopingCough$Month <- as.numeric(WhoopingCough$Month)
+
+# clean up row 5
+WhoopingCough$SourceCitation[5] <- "Associated Press. Children's Health - Another infant dies of whooping cough in California July 30 2010"
+WhoopingCough$ImpactScale[5] <- "Isl"
+
 # write results to file
 write.table(WhoopingCough, "WhoopingCough.csv", sep=",", col.names=TRUE, row.names = FALSE)
 
 
-unique(WhoopingCough$State)
-unique(WhoopingCough$Year)
+
