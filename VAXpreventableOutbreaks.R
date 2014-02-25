@@ -47,8 +47,6 @@ Dates<- str_split(WC$Date, "-", 2)
 # I am going to replace the range with the start date value 
 StartDate <- sapply(Dates, FUN=function(x) x[1])
 
-class(StartDate)
-
 # split Date to month and Year
 MonthYear <- str_split(StartDate, "/", 2)
 WhoopingCough$Month <- sapply(MonthYear, FUN= function(x) x[1])
@@ -100,26 +98,29 @@ colnames(TotalCasesByYear) <- c("Year", "CFRCases")
 
 ggplot(TotalCasesByYear, aes(x=Years, y=log(CFRCases))) +geom_point(color = "indianred1") + ggtitle("Pertussis Cases in the US")
 
-# read in CDC data
+# # read in CDC data
+# 
+# CDCcases <- read.table("CDC_PertussisCases.csv", header = TRUE, stringsAsFactors= FALSE,sep="," )
+# colnames(CDCcases) <- c("Year", "CDCCases")
+# 
+# tail(CDCcases)
+# # filter for cases from 2008 to 2013
+# CDCcases$Year
+# CDC2008_2013 <- CDCcases [87:92, ]
+# require(ggplot2)
+# # merge CFR data with CDC data
+# mergedCases <- join(x=TotalCasesByYear, y= CDC2008_2013, by = "Year", match ="first")
+# 
+# # metl data
+# require(reshape)
+# meltMerged <- melt(mergedCases, "Year", c("CFRCases", "CDCCases"))
+# colnames(meltMerged) <- c("Year", "Source", "Cases")
+# 
+# # log scale
+# ggplot(meltMerged, aes(x=Year, y=log(Cases))) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
+# 
+# 
+# ggplot(meltMerged, aes(x=Year, y=Cases)) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
 
-CDCcases <- read.table("CDC_PertussisCases.csv", header = TRUE, stringsAsFactors= FALSE,sep="," )
-colnames(CDCcases) <- c("Year", "CDCCases")
-
-tail(CDCcases)
-# filter for cases from 2008 to 2013
-CDCcases$Year
-CDC2008_2013 <- CDCcases [87:92, ]
-require(ggplot2)
-# merge CFR data with CDC data
-mergedCases <- join(x=TotalCasesByYear, y= CDC2008_2013, by = "Year", match ="first")
-
-# metl data
-require(reshape)
-meltMerged <- melt(mergedCases, "Year", c("CFRCases", "CDCCases"))
-colnames(meltMerged) <- c("Year", "Source", "Cases")
-
-# log scale
-ggplot(meltMerged, aes(x=Year, y=log(Cases))) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
-
-
-ggplot(meltMerged, aes(x=Year, y=Cases)) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
+head(WhoopingCough)
+names(WhoopingCough)
