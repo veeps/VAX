@@ -60,27 +60,22 @@ epidemic <- WhoopingCough[grep("Epd", WhoopingCough$ImpactScale), ]
 cluster <- WhoopingCough[grep("Clst", WhoopingCough$ImpactScale), ]
 min(cluster$Cases) 
 
+# remove commas from columns
+WhoopingCough$SourceCitation <- gsub(",", "", WhoopingCough$SourceCitation)
+
+# change month into numerics
+WhoopingCough$Month <- as.numeric(WhoopingCough$Month)
+
+# clean up row 5
+WhoopingCough$SourceCitation[5] <- "Associated Press. Children's Health - Another infant dies of whooping cough in California July 30 2010"
+WhoopingCough$ImpactScale[5] <- "Isl"
+
 # write results to file
 write.table(WhoopingCough, "WhoopingCough.csv", sep=",", col.names=TRUE, row.names = FALSE)
 
 
+
 ##########################################################
-require(maps)
-require(maptools)
-require(ggplot2)
-# find max and min longitude and latitude
-long <- c(min(WhoopingCough$Long),max(WhoopingCough$Long) )
-lat <- c(min(WhoopingCough$Lat),max(WhoopingCough$Lat) )
-
-all_states <- map_data("state")
-MapCases <- ggplot(data=WhoopingCough, aes(Long,Lat))
-MapCases + geom_polygon(data=all_states, aes(x=long, y=lat, group=group, color=State), colour="darkgray", fill = "ivory") +
-  geom_point(aes(size=Cases)) + xlim(long) + ylim(lat)
-names(WhoopingCough)
-
-ggplot(WhoopingCough, aes(x = Year, y = Cases, color = ImpactScale)) + geom_point() + ggtitle("CFR Pertussis Cases")
-
-names(WhoopingCough)
 
 
 # total cases per year
@@ -98,29 +93,23 @@ colnames(TotalCasesByYear) <- c("Year", "CFRCases")
 
 ggplot(TotalCasesByYear, aes(x=Years, y=log(CFRCases))) +geom_point(color = "indianred1") + ggtitle("Pertussis Cases in the US")
 
-# # read in CDC data
-# 
-# CDCcases <- read.table("CDC_PertussisCases.csv", header = TRUE, stringsAsFactors= FALSE,sep="," )
-# colnames(CDCcases) <- c("Year", "CDCCases")
-# 
-# tail(CDCcases)
-# # filter for cases from 2008 to 2013
-# CDCcases$Year
-# CDC2008_2013 <- CDCcases [87:92, ]
-# require(ggplot2)
-# # merge CFR data with CDC data
-# mergedCases <- join(x=TotalCasesByYear, y= CDC2008_2013, by = "Year", match ="first")
-# 
-# # metl data
-# require(reshape)
-# meltMerged <- melt(mergedCases, "Year", c("CFRCases", "CDCCases"))
-# colnames(meltMerged) <- c("Year", "Source", "Cases")
-# 
-# # log scale
-# ggplot(meltMerged, aes(x=Year, y=log(Cases))) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
-# 
-# 
-# ggplot(meltMerged, aes(x=Year, y=Cases)) + geom_point(aes(colour=Source)) + ggtitle("Pertusis Cases CDC vs. CFR")
+# read in CDC data
+CDCcases <- read.table("CDC_PertussisCases.csv", header = TRUE, stringsAsFactors= FALSE,sep="," )
+colnames(CDCcases) <- c("Year", "CDCCases")
 
-head(WhoopingCough)
-names(WhoopingCough)
+
+# filter for cases from 2008 to 2013
+CDCcases$Year
+CDC2008_2013 <- CDCcases [87:92, ]
+
+# merge CFR data with CDC data
+mergedCases <- join(x=TotalCasesByYear, y= CDC2008_2013, by = "Year", match ="first")
+
+# melt data
+require(reshape)
+meltMerged <- melt(mergedCases, "Year", c("CFRCases", "CDCCases"))
+colnames(meltMerged) <- c("Year", "Source", "Cases")
+
+# write results to file
+write.table(meltMerged, "CFR_CDC_WC_Cases.csv", sep = ",", col.names=TRUE, row.names = FALSE)
+
