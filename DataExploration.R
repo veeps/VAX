@@ -54,6 +54,7 @@ philosophical$State <- as.factor(philosophical$State)
 philosophical$Year <- as.factor(philosophical$Year)
 religious$State <- as.factor(religious$State)
 religious$Year <- as.factor(religious$Year)
+
 ggplot(religious, aes(x=Year, y=PubPercent)) +geom_line(aes(color=State, group = State)) + ggtitle("NonExempt Cases for Religious Purposes")
 ggplot(philosophical, aes(x=Year, y=PubPercent)) +geom_line(aes(color=State, group = State)) + ggtitle("NonExempt Cases for Philosophical Purposes")
 
