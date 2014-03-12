@@ -113,3 +113,4 @@ colnames(meltMerged) <- c("Year", "Source", "Cases")
 # write results to file
 write.table(meltMerged, "CFR_CDC_WC_Cases.csv", sep = ",", col.names=TRUE, row.names = FALSE)
 
+
