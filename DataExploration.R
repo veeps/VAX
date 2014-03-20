@@ -61,5 +61,15 @@ ggplot(philosophical, aes(x=Year, y=PubPercent)) +geom_line(aes(color=State, gro
 
 class(religious$PubPercent)
 
+###################### Model prediction ###############
 
-names(CFRwc)
+CDCwc <- read.table("CDC_PertussisCases.csv", header = TRUE, stringsAsFactors = FALSE, sep = ",")
+
+predict <- glm(cases )
+
+fit2 <- glm(label~ compression_ratio, data=trainBootstrap, family=binomial())
+logistic.model <- glm(label ~ frequency + density 
+                      + alchemy_category_score  + avglinksize +  commonlinkratio_1 
+                      + compression_ratio + embed_ratio + frameTagRatio + lengthyLinkDomain + linkwordscore
+                      + spelling_errors_ratio + numwords_in_url + is_news 
+                      + news_front_page, family = binomial(), data=train.new)
