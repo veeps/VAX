@@ -16,9 +16,20 @@
 
 		var dataset;
 
-		d3.csv("CDC_PertussisCases.csv", function(data){
+		d3.csv("CDC_PertussisCases.csv", function(error,data){
+			if (error) {
+				console.log(error);
+			} else {
+				console.log(data);
 
-			dataset = data;
+				dataset = data;
+				return {
+					Year: new Date(+d.Year, 0,1),
+					Cases: +d.Cases
+				}
+			}
+
+			
 		});
 
 		//Create SVG element
@@ -27,7 +38,7 @@
 					.attr("width", w)
 					.attr("height", h);
 
-			svg.selectAll("circle")
+			svg.selectAll("Object")
 				.data(dataset)
 				.enter()
 				.append("circle")
