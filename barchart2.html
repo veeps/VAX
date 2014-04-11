@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Drawing bar graph</title>
+		<style>
+
+		body {
+			font: 10px sans-serif;
+		}
+
+		.axis path,
+		.axis line{
+			fill: none;
+			stroke: #000;
+			shape-rendering: cripsEdges;
+		}
+
+		.axis text {
+			font-family: sans-serif;
+			font-size: 11px;
+		}
+
+		.bar{
+			fill: blue;
+		}
+
+		.bar:hover {
+			fill: black ;
+		}
+		.x.axis path{
+			display: none;
+		}
+
+		.d3-tip{
+			line-height: 1;
+			font-weight: bold;
+			padding: 12px;
+			background: rgba(0,0,0,0.8);
+			color: #fff;
+			border-radius: 2px;
+		}
+/* Triangle extender for the tooltip */
+		.d3-tip: after {
+			box-sizing: border-box;
+			display: inline;
+			font-size: 10px;
+			width: 100%;
+			line-height: 1;
+			color: rgba(0,0,0,0.8);
+			content: "\25BC";
+			position: absolute;
+			text-align: center;
+		}
+		</style>
+	</head>
+	<body>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+		<script>
+
+		var w = 900;
+		var h = 500; 
+		var barPadding = 1;
+
+		var dataset = [];
+
+		var xScale = d3.scale.ordinal()
+							 .domain(dataset.map(function(d) {return d.Year;}))
+							 .range([0,w]);
+
+		var yScale = d3.scale.linear()
+							 .domain([0, d3.max(dataset, function(d){return d.Cases;})])
+							 .range([0, h]);
+
+		var xAxis = d3.svg.axis()
+						.scale(xScale)
+						.orient("bottom")
+						.ticks(25);
+
+		var yAxis = d3.svg.axis()
+						.scale(yScale)
+						.orient("left")
+						.ticks(10);
+
+		var tip = d3.tip()
+			.attr('class', 'd3-tip')
+			.offset([-10,0])
+			.html(function(d){
+				return d.Event ;
+			})
+
+
+		var svg = d3.select("body").append("svg")
+			.attr("width", w)
+			.attr("height", h);
+
+		svg.call(tip);
+
+
+
+		d3.csv("CDC_PertussisCases.csv", type, function(error, data){
+			if(error){
+				console.log(error);
+			} else {
+				console.log(data);
+				dataset = data;
+			}
+		});
+
+			
+
+			svg.selectAll("rect")
+				.data(dataset)
+			  .enter().append("rect")
+			  	.attr("class", "bar")
+			  	.attr("x", function(d){
+			  		return i * (w/dataset.length);
+			  			})
+			  	.attr("y", function(d){
+			  		return yScale (d[1]);
+			  			})
+			  	.attr("width", xScale.rangeBand())
+			  	.attr("height", function(d){
+			  		return d.Year;
+			  	})
+			  	.on('mouseover', tip.show)
+			  	.on('mouseout', tip.hide);
+
+
+			svg.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0," + (h-barPadding) + ")")
+				.call(xAxis);
+
+			svg.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0" + barPadding + ",0)")
+				.call(yAxis);
+
+		function type(d){
+			d.Cases = +d.Cases;
+			return d;
+		};
+
+		</script>
+
+	</body>
+</html>
