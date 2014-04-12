@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+	<meta charset="utf-8">
+	<script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+
+</head>
+
+<body>
+	<script type ="text/javascript">
+
+var margin = {top: 50, right: 10, bottom: 0, left: 100};
+var w = 800 - margin.left - margin.right;
+var h = 600 - margin.top - margin.bottom; 
+
+var dataset = [
+	[
+		{ x: 2008, y: 49 },
+		{ x: 2009, y: 30 },
+		{ x: 2010, y: 8338 },
+		{ x: 2011, y: 1581 },
+		{ x: 2012, y: 27317 },
+		{ x: 2013, y: 17148 }
+	],
+	[
+		{ x: 2008, y: 13278 },
+		{ x: 2009, y: 16858 },
+		{ x: 2010, y: 27550 },
+		{ x: 2011, y: 18719 },
+		{ x: 2012, y: 48277 },
+		{ x: 2013, y: 24231 }
+	]
+];
+
+var stack = d3.layout.stack();
+
+stack(dataset);
+
+var xScale = d3.scale.ordinal()
+		.domain(d3.range(dataset[0].length))
+		.rangeRoundBands([0, w], 0.5);
+
+var yScale = d3.scale.linear()
+		.domain([0,
+				d3.max(dataset, function(d){
+					return d3.max(d, function(d){
+						return d.y0 + d.y;
+					});
+				})
+			])
+		.range([h, 0]);
+
+var xAxis = d3.svg.axis()
+	.scale(xScale)
+	.orient("bottom");
+
+var yAxis = d3.svg.axis()
+	.scale(yScale)
+	.orient("left");
+
+var colors = d3.scale.category10();
+
+var svg = d3.select("body")
+				.append("svg")
+				.attr("width", w + margin.left + margin.right)
+				.attr("height", h + margin.top + margin.bottom);
+
+var groups = svg.selectAll("g")
+		.data(dataset)
+		.enter()
+		.append("g")
+		.style("fill", function(d,i){
+			return colors(i);
+		});
+
+var rects = groups.selectAll("rect")
+		.data(function(d){ return d; })
+		.enter()
+		.append("rect")
+		.attr("x", function(d, i){
+				return 50 + xScale(i);
+		})
+		.attr("y", function(d) {
+				return yScale(d.y);
+		})
+		.attr("height", function(d) {
+				return yScale(d.y0) - yScale(d.y);
+		})
+		.attr("width", xScale.rangeBand());
+
+svg.append("g")
+	.attr("transform", "translate(0" + 55 + ",10)")
+	.call(yAxis);
+
+svg.append("g")
+	.attr("transform", "translate(50," + (h + 10)+ ")")
+	.call(xAxis);
+
+
+
+
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
